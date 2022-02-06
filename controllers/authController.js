@@ -3,19 +3,19 @@ const argon2 = require("argon2");
 const jwt = require("jsonwebtoken");
 
 exports.authController = {
-	register: async (req, res) => {
+	// register a new user (POST /api/v1/auth/register)
+	register: async (req, res, next) => {
 		const { name, email, password } = req.body;
 		// hash the password
 		const hashPassword = await argon2.hash(password);
 		// create new user
-		// can either use callback or promise with then chaining
-		User.create(
-			{
-				name,
-				email,
-				password: hashPassword,
-			},
-			(user) => {
+		// can either use callback or promise - then chaining
+		User.create({
+			name,
+			email,
+			password: hashPassword,
+		})
+			.then((user) => {
 				// generate new jwt
 				const token = jwt.sign(
 					{ id: user.id, userName: user.name, email: user.email },
@@ -25,19 +25,30 @@ exports.authController = {
 					status: "success",
 					data: { userName: user.name, token },
 				});
-			}
-		);
+			})
+			.catch((err) => {
+				return next(err);
+			});
 	},
-	login: (req, res) => {
+	// login a user (POST /api/v1/auth/login)
+	login: (req, res, next) => {
 		const { email, password } = req.body;
 		// query the db to find user
 		// can either use callback or promise with then chaining
 		User.findOne({ email: email }, async (err, user) => {
-			if (err) return res.status(400).json(err);
-			if (!user) return res.status(400).json("User not found");
+			if (err) next(err);
+			if (!user) {
+				const err = new Error("User not found!");
+				err.statusCode = 404;
+				return next(err);
+			}
 			// compare the password with argon2
 			const isValid = await argon2.verify(user.password, password);
-			if (!isValid) return res.status(400).json("Password is incorrect");
+			if (!isValid) {
+				const err = new Error("Invalid password!");
+				err.statusCode = 401;
+				return next(err);
+			}
 			// generate new jwt
 			const token = jwt.sign(
 				{ id: user.id, userName: user.name, email: user.email },

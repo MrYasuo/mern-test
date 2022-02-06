@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 
-const { authRoute, userRoute } = require("./routes");
+const { authRoute, userRoute, postRoute } = require("./routes");
+const errorHandler = require("./libs/middlewares/errorHandler");
 
 /* ----------------------- express ---------------------- */
 const app = express();
@@ -28,6 +29,8 @@ app.use(cors());
 /* ----------------------- router ----------------------- */
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/users", userRoute);
+app.use("/api/v1/posts", postRoute);
+app.use(errorHandler);
 
 app.listen(port, () => {
 	console.log(`Example app at http://localhost:${port}`);
