@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 
-const { authRoute, userRoute, postRoute } = require("./routes");
+const { authRoute, userRoute, postRoute, homeRoute } = require("./routes");
 const errorHandler = require("./libs/middlewares/errorHandler");
 
 /* ----------------------- express ---------------------- */
@@ -27,9 +27,15 @@ app.use(express.json());
 app.use(cors());
 
 /* ----------------------- router ----------------------- */
+app.use("/api/v1", homeRoute);
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/users", userRoute);
 app.use("/api/v1/posts", postRoute);
+app.all("*", (next) => {
+	const err = new Error("Not Found");
+	err.status = 404;
+	next(err);
+});
 app.use(errorHandler);
 
 app.listen(port, () => {

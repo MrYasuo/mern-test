@@ -8,10 +8,11 @@ const {
 	createOnePost,
 } = require("../controllers");
 
-// intercept all the requests with the secured middleware (validate token)
+router.get("/", getAllPosts);
+// intercept requests with the secured middleware (validate token)
 router.all("/", secured);
 // if user is authenticated, then continue
-router.route("/").get(getAllPosts).post(createOnePost);
+router.post("/", createOnePost);
 router.route("/:postId").delete(deleteOnePost).put(updateOnePost);
 
 module.exports = router;

@@ -60,4 +60,10 @@ exports.authController = {
 			});
 		});
 	},
+	logout: (res) => {
+		res.status(200).json({
+			status: "success",
+			data: { message: "Logout successfully" },
+		});
+	},
 };

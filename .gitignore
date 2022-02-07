@@ -1,4 +1,4 @@
 node_modules
-.env
 router.rest
 .history
+client/node_modules

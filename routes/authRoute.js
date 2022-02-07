@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const secured = require("../libs/middlewares/secured");
-const { register, login } = require("../controllers");
+const { register, login, logout } = require("../controllers");
 
 router.post("/login", login);
 router.post("/register", register);
+router.post("/logout", logout);
 
 module.exports = router;
