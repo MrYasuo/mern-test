@@ -16,5 +16,6 @@ cd client && npm i
    ```
 2. Run the server
    ```bash
+   cd mern-test
    npm run dev
    ```
