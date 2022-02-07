@@ -12,7 +12,7 @@ cd client && npm i
 1. Configure your **environment** variables
    ```bash
    MONGODB_URI=your_mongodb_uri
-   APP_SECRET=your_app_secret
+   JWT_SECRET=your_jwt_secret
    ```
 2. Run the server
    ```bash
